@@ -2,11 +2,8 @@ package com.juyou.tuliyou;
 
 import android.app.Application;
 import android.util.Log;
-
 import com.tencent.smtt.sdk.QbSdk;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by xilinch on 18-6-22 下午2:14.
