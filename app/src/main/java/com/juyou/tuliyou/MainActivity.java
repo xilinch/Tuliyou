@@ -17,6 +17,8 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
@@ -24,7 +26,9 @@ import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
-public class MainActivity extends Activity {
+import static com.juyou.tuliyou.LApplicaiton.getInstance;
+
+public class MainActivity extends BaseActivity {
 
     private LinearLayout ll_contain;
 
@@ -53,14 +57,21 @@ public class MainActivity extends Activity {
             String action = intent.getAction();
             if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(action)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
-                if (reason != null) {
-                    Intent activituy = new Intent(context, MainActivity.class);
+                if (reason != null && context != null) {
+                    if(context == null){
+                        context = getInstance();
+                    }
+                    Intent activity = new Intent(context, MainActivity.class);
+                    activity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        Log.e("my", "Home键被监听");
                         Toast.makeText(MainActivity.this, "Home键被监听", Toast.LENGTH_SHORT).show();
-                        context.startActivity(activituy);
+                        context.startActivity(activity);
                     } else if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         Toast.makeText(MainActivity.this, "多任务键被监听", Toast.LENGTH_SHORT).show();
-                        context.startActivity(activituy);
+                        Log.e("my", "多任务键被监听");
+                        context.startActivity(activity);
                     }
                 }
             }
@@ -68,12 +79,21 @@ public class MainActivity extends Activity {
     }
 
     /**
+     * 是否在前台
+     */
+    private boolean isForground = true;
+
+    private CheckService.MyBinder myBinder = null;
+
+    /**
      * 服务链接
      */
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-
+            if(service != null && service instanceof CheckService.MyBinder){
+                myBinder = (CheckService.MyBinder) service;
+            }
         }
 
         @Override
@@ -93,9 +113,32 @@ public class MainActivity extends Activity {
         initWebview();
         Intent intent = new Intent(this, CheckService.class);
         bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
+        startService(intent);
     }
 
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isForground = true;
+        if(myBinder != null){
+            myBinder.setIsForGround(isForground);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isForground = false;
+        if(myBinder != null){
+            myBinder.setIsForGround(isForground);
+        }
+    }
+
+    /**
+     * 初始化
+     */
     private void initWebview() {
         ll_contain = (LinearLayout) findViewById(R.id.ll_contain);
         x5WebView = new X5WebView(this, null);
@@ -178,7 +221,7 @@ public class MainActivity extends Activity {
             return true;
         }
         if (KeyEvent.KEYCODE_HOME == keyCode) {
-            Toast.makeText(getApplicationContext(), "HOME 键已被禁用...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "HOME 键已被禁用...", Toast.LENGTH_SHORT).show();
             return true;//同理
         }
         return super.onKeyDown(keyCode, event);

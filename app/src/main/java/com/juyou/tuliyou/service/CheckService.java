@@ -1,13 +1,18 @@
-package com.juyou.tuliyou;
+package com.juyou.tuliyou.service;
 
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.juyou.tuliyou.MainActivity;
+
+import static com.juyou.tuliyou.broadcast.BootBroadcast.ACTION_DESTROY;
 
 /**
  * Created by xilinch on 18-6-23 上午10:15.
@@ -27,6 +32,7 @@ public class CheckService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e("my","onStartCommand");
         if(checkThread == null){
             checkThread = new Thread(){
                 @Override
@@ -35,12 +41,10 @@ public class CheckService extends Service {
                         //每隔3s执行检查一次
                         Log.e("my","onStartCommand:" + isAppOnForeground(CheckService.this));
                         if(!isAppOnForeground(CheckService.this)){
-                            Intent intent1 = new Intent(CheckService.this, MainActivity.class);
-                            intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent1);
+                            startMyActivity();
                         }
                         try{
-                            Thread.sleep(3000);
+                            Thread.sleep(1500);
                         } catch (Exception exception){
                             exception.printStackTrace();
 
@@ -53,17 +57,58 @@ public class CheckService extends Service {
                     }
                 }
             };
+            try{
+                checkThread.start();
+            } catch (Exception exception){
+                exception.printStackTrace();
+
+            } finally{
+
+            }
         }
-        checkThread.start();
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
 
-        return null;
+        return new MyBinder();
     }
 
+    /**
+     * 是否在前台
+     */
+    private boolean isForGround = false;
+    public class MyBinder extends Binder{
+
+        public void setIsForGround(boolean isForGround){
+            CheckService.this.isForGround = isForGround;
+            Log.e("my","setIsForGround :" + isForGround);
+            //不在前台就要启动应用
+            if(!isForGround ){
+                startMyActivity();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_DESTROY);
+        sendBroadcast(intent);
+        super.onDestroy();
+    }
+
+    /**
+     * 启动服务
+     */
+    private void startMyActivity(){
+        Intent intent1 = new Intent(CheckService.this, MainActivity.class);
+//        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent1);
+    }
 
 
     public boolean isAppOnForeground(Context context) {
