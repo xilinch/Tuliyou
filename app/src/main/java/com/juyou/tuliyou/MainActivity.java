@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
@@ -33,6 +35,16 @@ public class MainActivity extends BaseActivity {
     private LinearLayout ll_contain;
 
     private X5WebView x5WebView;
+
+    /**
+     * 首页
+     */
+    private TextView tv_home;
+
+    /**
+     * 返回
+     */
+    private TextView tv_back;
 
     private String home = "https://m.tuliyou.com/h5/app";
 
@@ -108,7 +120,7 @@ public class MainActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        hideBottomUIMenu();
+        hideBottomUIMenu();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         registerBroadcast();
         initWebview();
@@ -144,6 +156,27 @@ public class MainActivity extends BaseActivity {
      */
     private void initWebview() {
         ll_contain = (LinearLayout) findViewById(R.id.ll_contain);
+        tv_home = (TextView) findViewById(R.id.tv_home);
+        tv_back = (TextView) findViewById(R.id.tv_back);
+        tv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (x5WebView != null ) {
+                    x5WebView.clearHistory();
+                    x5WebView.loadUrl(home);
+                }
+            }
+        });
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (x5WebView != null && x5WebView.canGoBack()) {
+                    x5WebView.goBack();
+
+                }
+            }
+        });
+
         x5WebView = new X5WebView(this, null);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         x5WebView.setLayoutParams(layoutParams);
