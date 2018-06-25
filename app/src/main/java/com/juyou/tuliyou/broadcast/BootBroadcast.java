@@ -20,26 +20,27 @@ public class BootBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        String action = intent.getAction();
-        if(Intent.ACTION_BOOT_COMPLETED.equals(action)){
-            //启动完成
-            startMyActivity(context);
-            Toast.makeText(context, "启动完成---",Toast.LENGTH_SHORT).show();
-        } else if(Intent.CATEGORY_HOME.equals(action)){
-            //主页
-            startMyActivity(context);
-            Toast.makeText(context, "主页---",Toast.LENGTH_SHORT).show();
-        } else if(Intent.CATEGORY_LAUNCHER.equals(action)){
-            //启动
-            startMyActivity(context);
-            Toast.makeText(context, "桌面组件---",Toast.LENGTH_SHORT).show();
-        } else if(action.equals(ACTION_DESTROY)){
-            //被杀死
+        if(context != null){
+            String action = intent.getAction();
+            if(Intent.ACTION_BOOT_COMPLETED.equals(action)){
+                //启动完成
+                startMyActivity(context);
+//                Toast.makeText(context, "启动完成---",Toast.LENGTH_SHORT).show();
+            } else if(Intent.CATEGORY_HOME.equals(action)){
+                //主页
+                startMyActivity(context);
+//                Toast.makeText(context, "主页---",Toast.LENGTH_SHORT).show();
+            } else if(Intent.CATEGORY_LAUNCHER.equals(action)){
+                //启动
+                startMyActivity(context);
+//                Toast.makeText(context, "桌面组件---",Toast.LENGTH_SHORT).show();
+            } else if(action.equals(ACTION_DESTROY)){
+                //被杀死
 //            startMyActivity(context);
-            Toast.makeText(context, "桌面组件---",Toast.LENGTH_SHORT).show();
-            Intent intent1 = new Intent(context, CheckService.class);
-            context.startService(intent1);
+//                Toast.makeText(context, "桌面组件---",Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(context, CheckService.class);
+                context.startService(intent1);
+            }
         }
 
     }

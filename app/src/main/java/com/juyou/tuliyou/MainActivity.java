@@ -1,6 +1,6 @@
 package com.juyou.tuliyou;
 
-import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
@@ -25,6 +23,8 @@ import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
+
+import java.util.ArrayList;
 
 import static com.juyou.tuliyou.LApplicaiton.getInstance;
 
@@ -62,15 +62,16 @@ public class MainActivity extends BaseActivity {
                         context = getInstance();
                     }
                     Intent activity = new Intent(context, MainActivity.class);
+                    activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     activity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_HOME_KEY)) {
-                        Log.e("my", "Home键被监听");
-                        Toast.makeText(MainActivity.this, "Home键被监听", Toast.LENGTH_SHORT).show();
+//                        Log.e("my", "Home键被监听");
+//                        Toast.makeText(MainActivity.this, "Home键被监听", Toast.LENGTH_SHORT).show();
                         context.startActivity(activity);
                     } else if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
-                        Toast.makeText(MainActivity.this, "多任务键被监听", Toast.LENGTH_SHORT).show();
-                        Log.e("my", "多任务键被监听");
+//                        Toast.makeText(MainActivity.this, "多任务键被监听", Toast.LENGTH_SHORT).show();
+//                        Log.e("my", "多任务键被监听");
                         context.startActivity(activity);
                     }
                 }
@@ -107,13 +108,15 @@ public class MainActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        hideBottomUIMenu();
+//        hideBottomUIMenu();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         registerBroadcast();
         initWebview();
-        Intent intent = new Intent(this, CheckService.class);
-        bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
-        startService(intent);
+        if(serviceConnection != null){
+            Intent intent = new Intent(this, CheckService.class);
+            bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
+            startService(intent);
+        }
     }
 
 
@@ -154,7 +157,7 @@ public class MainActivity extends BaseActivity {
                 int heightDiff = ll_contain.getRootView().getHeight() - ll_contain.getHeight();
                 Log.e("my", "onGlobalLayout:" + heightDiff);
                 //其实这个heightDiff换成dp更靠谱一些
-                hideBottomUIMenu();
+//                hideBottomUIMenu();
                 if (heightDiff > 100) {
 //                    hideBottomUIMenu();
                     //大小超过100时，一般为显示虚拟键盘事件
@@ -254,5 +257,17 @@ public class MainActivity extends BaseActivity {
         if(serviceConnection != null){
             unbindService(serviceConnection);
         }
+    }
+
+
+    public static boolean isServiceWorked(Context context, String serviceName) {
+        ActivityManager myManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
+        for (int i = 0; i < runningService.size(); i++) {
+            if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

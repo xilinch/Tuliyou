@@ -1,7 +1,6 @@
 package com.juyou.tuliyou;
 
 import android.app.Application;
-import android.util.Log;
 import com.tencent.smtt.sdk.QbSdk;
 
 
