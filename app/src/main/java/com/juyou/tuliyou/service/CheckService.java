@@ -34,7 +34,7 @@ public class CheckService extends Service {
 
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public synchronized int onStartCommand(Intent intent, int flags, int startId) {
 //        Log.e("my", "onStartCommand-------");
         if (checkThread == null) {
             checkThread = new Thread() {
