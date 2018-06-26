@@ -75,8 +75,8 @@ public class MainActivity extends BaseActivity {
                     }
                     Intent activity = new Intent(context, MainActivity.class);
                     activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    activity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                    activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_HOME_KEY)) {
 //                        Log.e("my", "Home键被监听");
 //                        Toast.makeText(MainActivity.this, "Home键被监听", Toast.LENGTH_SHORT).show();
@@ -188,9 +188,9 @@ public class MainActivity extends BaseActivity {
             public void onGlobalLayout() {
                 //比较Activity根布局与当前布局的大小
                 int heightDiff = ll_contain.getRootView().getHeight() - ll_contain.getHeight();
-                Log.e("my", "onGlobalLayout:" + heightDiff);
+//                Log.e("my", "onGlobalLayout:" + heightDiff);
                 //其实这个heightDiff换成dp更靠谱一些
-//                hideBottomUIMenu();
+                hideBottomUIMenu();
                 if (heightDiff > 100) {
 //                    hideBottomUIMenu();
                     //大小超过100时，一般为显示虚拟键盘事件
@@ -248,7 +248,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.e("my", "keyCode:" + keyCode);
+//        Log.e("my", "keyCode:" + keyCode);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (x5WebView != null && x5WebView.canGoBack()) {
                 x5WebView.goBack();

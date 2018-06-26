@@ -7,11 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.util.Log;
-
 import com.juyou.tuliyou.MainActivity;
-
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,7 +27,7 @@ public class CheckService extends Service {
 
     private boolean isFirst = true;
 
-    private Thread checkThread ;
+    private Thread checkThread;
 
     public CheckService() {
     }
@@ -37,41 +35,41 @@ public class CheckService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("my","onStartCommand-------");
-        if(checkThread == null){
-            checkThread = new Thread(){
+//        Log.e("my", "onStartCommand-------");
+        if (checkThread == null) {
+            checkThread = new Thread() {
                 @Override
                 public void run() {
-                    while (true){
-                        //每隔3s执行检查一次
-                        Log.e("my","onStartCommand:" + isAppOnForeground(CheckService.this));
-                        if(!isAppOnForeground(CheckService.this)){
+                    while (true) {
+                        //每隔1s执行检查一次
+//                        Log.e("my", "onStartCommand:" + isAppOnForeground(CheckService.this));
+                        if (!isAppOnForeground(CheckService.this)) {
                             startMyActivity();
                         }
-                        try{
+                        try {
                             Thread.sleep(1000);
-                        } catch (Exception exception){
+                        } catch (Exception exception) {
                             exception.printStackTrace();
 
-                        } finally{
+                        } finally {
 
                         }
-                        if(isFirst){
+                        if (isFirst) {
                             isFirst = false;
                         }
                     }
                 }
             };
-            try{
+            try {
                 checkThread.start();
-            } catch (Exception exception){
+            } catch (Exception exception) {
                 exception.printStackTrace();
 
-            } finally{
+            } finally {
 
             }
         }
-        if(thread != null){
+        if (thread != null) {
             thread.start();
         }
         return START_STICKY;
@@ -87,12 +85,13 @@ public class CheckService extends Service {
      * 是否在前台
      */
     private boolean isForGround = false;
-    public class MyBinder extends Binder{
 
-        public void setIsForGround(boolean isForGround){
+    public class MyBinder extends Binder {
+
+        public void setIsForGround(boolean isForGround) {
             CheckService.this.isForGround = isForGround;
             //不在前台就要启动应用
-            if(!isForGround ){
+            if (!isForGround) {
                 startMyActivity();
             }
         }
@@ -109,7 +108,7 @@ public class CheckService extends Service {
     /**
      * 启动服务
      */
-    private void startMyActivity(){
+    private void startMyActivity() {
         Intent intent1 = new Intent(CheckService.this, MainActivity.class);
         intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -120,14 +119,31 @@ public class CheckService extends Service {
 
     public boolean isAppOnForeground(Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        boolean isOnForground = false;
+        List<ActivityManager.RunningAppProcessInfo> runnings = am.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo running : runnings) {
+            if (running.processName.equals(getPackageName())) {
+                if (running.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                        || running.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
+                    //前台显示...
+//                    Log.e("my", "前台显示");
+                    isOnForground = true;
+                } else {
+                    //后台显示...
+                    Log.e("my", "后台显示");
+                    isOnForground = false;
+                }
+                break;
+            }
+        }
         String currentPackageName = "";
         if (am.getRunningTasks(1).size() > 0) {
             ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
             currentPackageName = cn.getPackageName();
         }
-        Log.e("my", "isAppOnForeground  :" + currentPackageName + "   getPackageName:" + getPackageName());
-        return !TextUtils.isEmpty(currentPackageName)
-                && currentPackageName.equals(getPackageName());
+//        Log.e("my", "isAppOnForeground  :" + currentPackageName + "   getPackageName:" + getPackageName());
+//        return !TextUtils.isEmpty(currentPackageName) && currentPackageName.equals(getPackageName());
+        return isOnForground;
     }
 
     /**
@@ -143,7 +159,7 @@ public class CheckService extends Service {
                 @Override
                 public void run() {
                     boolean b = MainActivity.isServiceWorked(CheckService.this, GuardService.TAG);
-                    if(!b) {
+                    if (!b) {
                         Intent service = new Intent(CheckService.this, GuardService.class);
                         startService(service);
                     }
