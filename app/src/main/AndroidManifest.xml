@@ -71,6 +71,22 @@
         </receiver>
         <meta-data android:value="5b2e1ada8f4a9d65e7000017" android:name="UMENG_APPKEY"/>
         <meta-data android:value="offical" android:name="UMENG_CHANNEL"/>
+        <!--buglly-->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
     </application>
 
 </manifest>

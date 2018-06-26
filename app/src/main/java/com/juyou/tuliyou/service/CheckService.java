@@ -44,10 +44,10 @@ public class CheckService extends Service {
                         //每隔1s执行检查一次
 //                        Log.e("my", "onStartCommand:" + isAppOnForeground(CheckService.this));
                         if (!isAppOnForeground(CheckService.this)) {
-                            startMyActivity();
+                            MainActivity.startMyActivity(CheckService.this);
                         }
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(2000);
                         } catch (Exception exception) {
                             exception.printStackTrace();
 
@@ -92,7 +92,7 @@ public class CheckService extends Service {
             CheckService.this.isForGround = isForGround;
             //不在前台就要启动应用
             if (!isForGround) {
-                startMyActivity();
+                MainActivity.startMyActivity(CheckService.this);
             }
         }
     }
@@ -105,16 +105,6 @@ public class CheckService extends Service {
         super.onDestroy();
     }
 
-    /**
-     * 启动服务
-     */
-    private void startMyActivity() {
-        Intent intent1 = new Intent(CheckService.this, MainActivity.class);
-        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent1);
-    }
 
 
     public boolean isAppOnForeground(Context context) {

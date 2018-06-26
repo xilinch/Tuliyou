@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
+import com.tencent.bugly.Bugly;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -73,18 +74,14 @@ public class MainActivity extends BaseActivity {
                     if(context == null){
                         context = getInstance();
                     }
-                    Intent activity = new Intent(context, MainActivity.class);
-                    activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    activity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                    activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_HOME_KEY)) {
 //                        Log.e("my", "Home键被监听");
 //                        Toast.makeText(MainActivity.this, "Home键被监听", Toast.LENGTH_SHORT).show();
-                        context.startActivity(activity);
+                        startMyActivity(context);
                     } else if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
 //                        Toast.makeText(MainActivity.this, "多任务键被监听", Toast.LENGTH_SHORT).show();
 //                        Log.e("my", "多任务键被监听");
-                        context.startActivity(activity);
+                        startMyActivity(context);
                     }
                 }
             }
@@ -129,6 +126,8 @@ public class MainActivity extends BaseActivity {
             bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
             startService(intent);
         }
+
+        Bugly.init(getApplicationContext(), "f8f1c24f59", false);
     }
 
 
@@ -302,5 +301,17 @@ public class MainActivity extends BaseActivity {
             }
         }
         return false;
+    }
+
+
+    /**
+     * 启动服务
+     */
+    public static void startMyActivity(Context context) {
+        Intent intent1 = new Intent(context, MainActivity.class);
+        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        context.startActivity(intent1);
     }
 }
