@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
-import com.tencent.bugly.Bugly;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -35,7 +34,8 @@ public class MainActivity extends BaseActivity {
 
     private LinearLayout ll_contain;
 
-    private X5WebView x5WebView;
+//    private X5WebView x5WebView;
+    private WebView x5WebView;
 
     /**
      * 首页
@@ -48,6 +48,7 @@ public class MainActivity extends BaseActivity {
     private TextView tv_back;
 
     private String home = "https://m.tuliyou.com/h5/app";
+//    private String home = "http://soft.imtt.qq.com/browser/tes/feedback.html";
 
     /**
      * 系统按键监听
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity {
             startService(intent);
         }
 
-        Bugly.init(getApplicationContext(), "f8f1c24f59", false);
+//        Bugly.init(getApplicationContext(), "f8f1c24f59", false);
     }
 
 
@@ -138,6 +139,10 @@ public class MainActivity extends BaseActivity {
         isForground = true;
         if(myBinder != null){
             myBinder.setIsForGround(isForground);
+        }
+        if (x5WebView != null) {
+            x5WebView.onResume();
+            x5WebView.resumeTimers();
         }
     }
 
@@ -154,13 +159,19 @@ public class MainActivity extends BaseActivity {
      * 初始化
      */
     private void initWebview() {
+        x5WebView = new X5WebView(this, null);
+//        x5WebView = new X5WebView(this, null);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        x5WebView.setLayoutParams(layoutParams);
+        setWebviewClient();
         ll_contain = (LinearLayout) findViewById(R.id.ll_contain);
+        ll_contain.addView(x5WebView);
         tv_home = (TextView) findViewById(R.id.tv_home);
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (x5WebView != null ) {
+                if (x5WebView != null && !home.equals(x5WebView.getUrl())) {
                     x5WebView.clearHistory();
                     x5WebView.loadUrl(home);
                 }
@@ -175,12 +186,6 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-
-        x5WebView = new X5WebView(this, null);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        x5WebView.setLayoutParams(layoutParams);
-        setWebviewClient();
-        ll_contain.addView(x5WebView);
         x5WebView.loadUrl(home);
         ll_contain.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -225,6 +230,12 @@ public class MainActivity extends BaseActivity {
                 //统一做处理，如果是exit:///，则退出当前页面
                 if ("exit:///".equals(url)) {
                     webView.loadUrl(home);
+                    return true;
+                } else if(url!= null && url.startsWith("tel:")){
+                    //唤起拨打电话
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     return true;
                 }
                 return super.shouldOverrideUrlLoading(webView, url);
