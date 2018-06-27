@@ -1,9 +1,12 @@
 package com.juyou.tuliyou;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.tencent.smtt.sdk.QbSdk;
+
+import static com.juyou.tuliyou.GuiActivity.ACTION_FINISH;
 
 
 /**
@@ -33,6 +36,9 @@ public class LApplicaiton extends Application {
                 //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
                 Log.e("my","onViewInitFinished:" + finished);
                 MainActivity.startMyActivity(getApplicationContext());
+                Intent intent = new Intent();
+                intent.setAction(ACTION_FINISH);
+                sendBroadcast(intent);
             }
 
             @Override

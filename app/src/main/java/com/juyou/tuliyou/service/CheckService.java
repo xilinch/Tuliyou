@@ -32,7 +32,7 @@ public class CheckService extends Service {
     public CheckService() {
     }
 
-
+    boolean isStart = false;
     @Override
     public synchronized int onStartCommand(Intent intent, int flags, int startId) {
 //        Log.e("my", "onStartCommand-------");
@@ -61,7 +61,11 @@ public class CheckService extends Service {
                 }
             };
             try {
-                checkThread.start();
+                if(!isStart){
+                    checkThread.start();
+                    isStart = true;
+                }
+
             } catch (Exception exception) {
                 exception.printStackTrace();
 
