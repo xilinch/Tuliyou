@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
+import com.tencent.bugly.Bugly;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -128,7 +129,7 @@ public class MainActivity extends BaseActivity {
             startService(intent);
         }
 
-//        Bugly.init(getApplicationContext(), "f8f1c24f59", false);
+        Bugly.init(getApplicationContext(), "f8f1c24f59", false);
     }
 
 
