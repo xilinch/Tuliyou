@@ -35,17 +35,17 @@ public class CheckService extends Service {
     boolean isStart = false;
     @Override
     public synchronized int onStartCommand(Intent intent, int flags, int startId) {
-//        Log.e("my", "onStartCommand-------");
+        Log.e("my", "onStartCommand-------");
         if (checkThread == null) {
             checkThread = new Thread() {
                 @Override
                 public void run() {
                     while (true) {
                         //每隔1s执行检查一次
-//                        Log.e("my", "onStartCommand:" + isAppOnForeground(CheckService.this));
-                        if (!isAppOnForeground(CheckService.this)) {
+                        Log.e("my", "onStartCommand:" + isAppOnForeground(CheckService.this));
+//                        if (!isAppOnForeground(CheckService.this)) {
                             MainActivity.startMyActivity(CheckService.this);
-                        }
+//                        }
                         try {
                             Thread.sleep(2000);
                         } catch (Exception exception) {
@@ -106,6 +106,17 @@ public class CheckService extends Service {
         Intent intent = new Intent();
         intent.setAction(ACTION_DESTROY);
         sendBroadcast(intent);
+        try{
+            checkThread.stop();
+            checkThread = null;
+        } catch (Exception exception){
+           exception.printStackTrace();
+
+        } finally{
+
+        }
+
+
         super.onDestroy();
     }
 
