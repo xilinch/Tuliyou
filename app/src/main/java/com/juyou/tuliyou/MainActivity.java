@@ -17,7 +17,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
 import com.tencent.bugly.Bugly;
@@ -55,6 +55,14 @@ public class MainActivity extends BaseActivity {
      * 系统按键监听
      */
     private InnerRecevier innerReceiver;
+
+    private long lastBackClickTime = 0l;
+
+    private int backClickcount = 0;
+
+    private long lastHomeClickTime = 0l;
+
+    private int homeClickcount = 0;
 
     /**
      * 系统按键监听
@@ -130,6 +138,7 @@ public class MainActivity extends BaseActivity {
         }
 
         Bugly.init(getApplicationContext(), "f8f1c24f59", false);
+//        Toast.makeText(this,"更新",Toast.LENGTH_SHORT).show();
     }
 
 
@@ -272,6 +281,24 @@ public class MainActivity extends BaseActivity {
                 x5WebView.goBack();
 
             }
+            long currentTime = System.currentTimeMillis();
+            if(currentTime - lastBackClickTime < 500){
+                backClickcount = backClickcount + 1;
+
+            } else {
+                //do nothing
+
+            }
+            lastBackClickTime = currentTime;
+            if(backClickcount >= 8){
+                Intent checkService = new Intent(this, CheckService.class);
+                Intent GuardService = new Intent(this, com.juyou.tuliyou.service.GuardService.class);
+                stopService(checkService);
+                stopService(GuardService);
+                MainActivity.this.finish();
+                System.exit(0);
+            }
+            Log.e("my","backClickcount:" + backClickcount);
             return true;
         }
         if (KeyEvent.KEYCODE_HOME == keyCode) {

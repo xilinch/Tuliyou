@@ -1,9 +1,13 @@
 package com.juyou.tuliyou;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.smtt.sdk.QbSdk;
 
 import static com.juyou.tuliyou.GuiActivity.ACTION_FINISH;
@@ -19,12 +23,25 @@ public class LApplicaiton extends Application {
 
     private static LApplicaiton instance;
 
+    public static String S_BUGLY_APPID = "f8f1c24f59";
+
     @Override
     public void onCreate() {
         super.onCreate();
+        Bugly.init(this, S_BUGLY_APPID, false);
         initX5();
         instance = this;
     }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
+        // 安装tinker
+        // TinkerManager.installTinker(this); 替换成下面Bugly提供的方法
+        Beta.installTinker(this);
+    }
+
 
     private void initX5() {
         //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。

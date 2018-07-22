@@ -73,8 +73,9 @@ public class CheckService extends Service {
 
             }
         }
-        if (thread != null) {
+        if (thread != null && !isThreadStarted) {
             thread.start();
+            isThreadStarted = true;
         }
         return START_STICKY;
     }
@@ -126,19 +127,21 @@ public class CheckService extends Service {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         boolean isOnForground = false;
         List<ActivityManager.RunningAppProcessInfo> runnings = am.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo running : runnings) {
-            if (running.processName.equals(getPackageName())) {
-                if (running.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-                        || running.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
-                    //前台显示...
+        if(runnings != null){
+            for (ActivityManager.RunningAppProcessInfo running : runnings) {
+                if (running.processName.equals(getPackageName())) {
+                    if (running.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                            || running.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
+                        //前台显示...
 //                    Log.e("my", "前台显示");
-                    isOnForground = true;
-                } else {
-                    //后台显示...
-                    Log.e("my", "后台显示");
-                    isOnForground = false;
+                        isOnForground = true;
+                    } else {
+                        //后台显示...
+                        Log.e("my", "后台显示");
+                        isOnForground = false;
+                    }
+                    break;
                 }
-                break;
             }
         }
         String currentPackageName = "";
@@ -151,6 +154,8 @@ public class CheckService extends Service {
         return isOnForground;
     }
 
+
+    private boolean isThreadStarted = false;
     /**
      * 互相唤醒
      */
