@@ -42,7 +42,7 @@ public class CheckService extends Service {
                 public void run() {
                     while (true) {
                         //每隔1s执行检查一次
-                        Log.e("my", "onStartCommand:" + isAppOnForeground(CheckService.this));
+//                        Log.e("my", "onStartCommand:" + isAppOnForeground(CheckService.this));
 //                        if (!isAppOnForeground(CheckService.this)) {
                             MainActivity.startMyActivity(CheckService.this);
 //                        }
@@ -146,7 +146,7 @@ public class CheckService extends Service {
                         isOnForground = true;
                     } else {
                         //后台显示...
-                        Log.e("my", "后台显示");
+//                        Log.e("my", "后台显示");
                         isOnForground = false;
                     }
                     break;

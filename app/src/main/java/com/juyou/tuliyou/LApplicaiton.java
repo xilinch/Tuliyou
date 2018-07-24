@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
-
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.smtt.sdk.QbSdk;
 
 import static com.juyou.tuliyou.GuiActivity.ACTION_FINISH;
@@ -28,7 +28,8 @@ public class LApplicaiton extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Bugly.init(this, S_BUGLY_APPID, false);
+        initHotfix();
+        Bugly.init(this, S_BUGLY_APPID, true);
         initX5();
         instance = this;
     }
@@ -40,6 +41,7 @@ public class LApplicaiton extends Application {
         // 安装tinker
         // TinkerManager.installTinker(this); 替换成下面Bugly提供的方法
         Beta.installTinker(this);
+        Log.e("my","attachBaseContext  Beta.installTinker");
     }
 
 
@@ -76,6 +78,60 @@ public class LApplicaiton extends Application {
             instance = new LApplicaiton();
         }
         return instance;
+    }
+
+    private void initHotfix(){
+        Log.e("my","initHotfix  ---");
+        // 设置是否开启热更新能力，默认为true
+        Beta.enableHotfix = true;
+        // 设置是否自动下载补丁
+        Beta.canAutoDownloadPatch = true;
+        // 设置是否提示用户重启
+        Beta.canNotifyUserRestart = false;
+        // 设置是否自动合成补丁
+        Beta.canAutoPatch = true;
+
+        // 补丁回调接口，可以监听补丁接收、下载、合成的回调
+        Beta.betaPatchListener = new BetaPatchListener() {
+            @Override
+            public void onPatchReceived(String patchFileUrl) {
+                //Toast.makeText(getApplicationContext(), patchFileUrl, Toast.LENGTH_SHORT).show();
+                Log.e("my","attachBaseContext  patchFileUrl:" + patchFileUrl);
+            }
+
+            @Override
+            public void onDownloadReceived(long savedLength, long totalLength) {
+                Log.e("my","onDownloadReceived ");
+            }
+
+            @Override
+            public void onDownloadSuccess(String patchFilePath) {
+                Log.e("my","onDownloadSuccess ");
+            }
+
+            @Override
+            public void onDownloadFailure(String msg) {
+                Log.e("my","onDownloadFailure :" + msg);
+            }
+
+            @Override
+            public void onApplySuccess(String msg) {
+                Log.e("my","onApplySuccess msg:" + msg);
+            }
+
+            @Override
+            public void onApplyFailure(String msg) {
+//                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                Log.e("my","onApplyFailure msg:" + msg);
+            }
+
+            @Override
+            public void onPatchRollback() {
+                Log.e("my","onPatchRollback ");
+//                Toast.makeText(getApplicationContext(), "onPatchRollback", Toast.LENGTH_SHORT).show();
+            }
+        };
+        Log.e("my","initHotfix  end");
     }
 
 }

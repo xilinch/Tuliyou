@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Build;
 import android.view.View;
 
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by xilinch on 18-6-23 下午6:18.
@@ -18,14 +17,14 @@ public class BaseActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+//        MobclickAgent.onResume(this);
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+//        MobclickAgent.onPause(this);
     }
 
     /**
