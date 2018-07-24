@@ -37,7 +37,7 @@
 # ------------------ Keep LineNumbers and properties ---------------- #
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 # --------------------------------------------------------------------------
-#-keep class **JNI* {*;}
+-keep class **JNI* {*;}
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 # tinker混淆规则

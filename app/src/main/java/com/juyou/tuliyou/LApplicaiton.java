@@ -29,7 +29,7 @@ public class LApplicaiton extends Application {
     public void onCreate() {
         super.onCreate();
         initHotfix();
-        Bugly.init(this, S_BUGLY_APPID, true);
+        Bugly.init(this, S_BUGLY_APPID, false);
         initX5();
         instance = this;
     }

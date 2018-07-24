@@ -16,13 +16,10 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
-
     // recommend
     dexOptions {
         jumboMode = true
     }
-
-
     // 签名配置
     signingConfigs {
         release {
@@ -39,10 +36,9 @@ android {
             storePassword '123qaz'
         }
     }
-
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -51,6 +47,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
+    }
+    productFlavors {
     }
 }
 
