@@ -136,9 +136,7 @@ public class MainActivity extends BaseActivity {
             bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
             startService(intent);
         }
-
-        Bugly.init(getApplicationContext(), "f8f1c24f59", false);
-//        Toast.makeText(this,"更新",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"更新",Toast.LENGTH_SHORT).show();
     }
 
 

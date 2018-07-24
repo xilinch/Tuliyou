@@ -73,10 +73,19 @@ public class CheckService extends Service {
 
             }
         }
-        if (thread != null && !isThreadStarted) {
-            thread.start();
-            isThreadStarted = true;
+        try{
+            if (thread != null && !isThreadStarted) {
+                isThreadStarted = true;
+                thread.start();
+            }
+        } catch (Exception exception){
+           exception.printStackTrace();
+
+        } finally{
+
         }
+
+
         return START_STICKY;
     }
 
