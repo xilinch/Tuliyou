@@ -29,7 +29,6 @@ import com.tencent.smtt.sdk.WebViewClient;
 
 import java.util.ArrayList;
 
-import static com.juyou.tuliyou.LApplicaiton.getInstance;
 
 public class MainActivity extends BaseActivity {
 
@@ -82,7 +81,7 @@ public class MainActivity extends BaseActivity {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
                 if (reason != null && context != null) {
                     if(context == null){
-                        context = getInstance();
+                        context = getApplication();
                     }
                     if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_HOME_KEY)) {
 //                        Log.e("my", "Home键被监听");
@@ -136,7 +135,7 @@ public class MainActivity extends BaseActivity {
             bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
             startService(intent);
         }
-        Toast.makeText(this,"更新",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"更新",Toast.LENGTH_SHORT).show();
     }
 
 

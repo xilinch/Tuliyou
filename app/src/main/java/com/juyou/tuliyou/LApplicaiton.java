@@ -1,14 +1,19 @@
 package com.juyou.tuliyou;
 
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.tinker.loader.app.DefaultApplicationLike;
+import com.tencent.tinker.loader.app.TinkerApplication;
+import com.tencent.tinker.loader.shareutil.ShareConstants;
 
 import static com.juyou.tuliyou.GuiActivity.ACTION_FINISH;
 
@@ -19,7 +24,13 @@ import static com.juyou.tuliyou.GuiActivity.ACTION_FINISH;
  * 1.applicaiotn
  */
 
-public class LApplicaiton extends Application {
+public class LApplicaiton extends TinkerApplication {
+
+    public LApplicaiton(){
+        super(ShareConstants.TINKER_ENABLE_ALL, "com.juyou.tuliyou.SampleApplicationLike",
+                "com.tencent.tinker.loader.TinkerLoader", false);
+    }
+
 
     private static LApplicaiton instance;
 
@@ -29,20 +40,20 @@ public class LApplicaiton extends Application {
     public void onCreate() {
         super.onCreate();
         initHotfix();
-        Bugly.init(this, S_BUGLY_APPID, false);
+//        Bugly.init(getApplication(), S_BUGLY_APPID, true);
         initX5();
         instance = this;
     }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(base);
-        // 安装tinker
-        // TinkerManager.installTinker(this); 替换成下面Bugly提供的方法
-        Beta.installTinker(this);
-        Log.e("my","attachBaseContext  Beta.installTinker");
-    }
+//
+//    @Override
+//    public void onBaseContextAttached(Context base) {
+//        super.onBaseContextAttached(base);
+//        MultiDex.install(base);
+//        // 安装tinker
+//        // TinkerManager.installTinker(this); 替换成下面Bugly提供的方法
+//        Beta.installTinker(this);
+//        Log.e("my","attachBaseContext  Beta.installTinker");
+//    }
 
 
     private void initX5() {
@@ -54,10 +65,10 @@ public class LApplicaiton extends Application {
             public void onViewInitFinished(boolean finished) {
                 //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
                 Log.e("my","onViewInitFinished:" + finished);
-                MainActivity.startMyActivity(getApplicationContext());
+                MainActivity.startMyActivity(getBaseContext());
                 Intent intent = new Intent();
                 intent.setAction(ACTION_FINISH);
-                sendBroadcast(intent);
+                getBaseContext().sendBroadcast(intent);
             }
 
             @Override
@@ -68,17 +79,17 @@ public class LApplicaiton extends Application {
         //x5内核初始化接口
 
         try {
-            QbSdk.initX5Environment(getApplicationContext(), cb);
+            QbSdk.initX5Environment(getBaseContext(), cb);
         } catch (Exception e) {
         }
     }
 
-    public static LApplicaiton getInstance(){
-        if(instance == null){
-            instance = new LApplicaiton();
-        }
-        return instance;
-    }
+//    public static LApplicaiton getInstance(){
+//        if(instance == null){
+//            instance = new LApplicaiton();
+//        }
+//        return instance;
+//    }
 
     private void initHotfix(){
         Log.e("my","initHotfix  ---");

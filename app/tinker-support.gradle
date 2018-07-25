@@ -1,11 +1,11 @@
 apply plugin: 'com.tencent.bugly.tinker-support'
 
-def bakPath = file("bakApk/")
+def bakPath = file("bakApk")
 
 /**
  * 此处填写每次构建生成的基准包目录
  */
-def baseApkDir = "app-0723-20-52-55"
+def baseApkDir = "app-0725-19-18-03"
 
 /**
  * 对于插件各参数的详细解析请参考
@@ -46,7 +46,7 @@ tinkerSupport {
      isProtectedApp = true
 
     // 是否采用反射Application的方式集成，无须改造Application
-    enableProxyApplication = true
+    enableProxyApplication = false
 
 }
 
