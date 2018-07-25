@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity {
             bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
             startService(intent);
         }
-//        Toast.makeText(this,"更新",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"已使用热更新",Toast.LENGTH_SHORT).show();
     }
 
 
