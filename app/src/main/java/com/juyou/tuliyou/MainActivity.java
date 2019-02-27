@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -15,12 +14,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.webkit.GeolocationPermissions;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
-import com.tencent.bugly.Bugly;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -35,7 +33,7 @@ public class MainActivity extends BaseActivity {
     private LinearLayout ll_contain;
 
     private X5WebView x5WebView;
-//    private WebView x5WebView;
+//    private android.webkit.WebView webView;
 
     /**
      * 首页
@@ -47,6 +45,7 @@ public class MainActivity extends BaseActivity {
      */
     private TextView tv_back;
 
+//    private String home = "http://4.u.mgd5.com/c/ayga/6p84/index.html?t=2078945982&custom=&crid=&s=3&from=groupmessage&isappinstalled=0";
     private String home = "https://m.tuliyou.com/h5/app";
 //    private String home = "http://soft.imtt.qq.com/browser/tes/feedback.html";
 
@@ -131,11 +130,11 @@ public class MainActivity extends BaseActivity {
         registerBroadcast();
         initWebview();
         if(serviceConnection != null){
-            Intent intent = new Intent(this, CheckService.class);
-            bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
-            startService(intent);
+//            Intent intent = new Intent(this, CheckService.class);
+//            bindService(intent, serviceConnection ,BIND_AUTO_CREATE);
+//            startService(intent);
         }
-        Toast.makeText(this,"已使用热更新",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"已使用热更新",Toast.LENGTH_SHORT).show();
     }
 
 
@@ -167,7 +166,7 @@ public class MainActivity extends BaseActivity {
      */
     private void initWebview() {
         x5WebView = new X5WebView(this, null);
-//        x5WebView = new X5WebView(this, null);
+//        webView = new BasicWebView(this, null);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         x5WebView.setLayoutParams(layoutParams);
         setWebviewClient();
@@ -224,9 +223,10 @@ public class MainActivity extends BaseActivity {
                 super.onShowCustomView(view, customViewCallback);
             }
 
+
             @Override
-            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissionsCallback geolocationPermissionsCallback) {
-                geolocationPermissionsCallback.invoke(origin, true, true);
+            public void onGeolocationPermissionsShowPrompt(String s, GeolocationPermissionsCallback geolocationPermissionsCallback) {
+                super.onGeolocationPermissionsShowPrompt(s, geolocationPermissionsCallback);
             }
         });
 
@@ -276,7 +276,6 @@ public class MainActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (x5WebView != null && x5WebView.canGoBack()) {
                 x5WebView.goBack();
-
             }
             long currentTime = System.currentTimeMillis();
             if(currentTime - lastBackClickTime < 500){
