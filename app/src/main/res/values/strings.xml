@@ -1,3 +1,38 @@
 <resources>
-    <string name="app_name">途礼游</string>
+    <!--途礼游  拇指计划-->
+    <string name="app_name">拇指计划</string>
+
+
+    <string name="please_login">请登录</string>
+    <string name="please_register">注册</string>
+
+    <string name="please_enter_phone_number">请输入手机号</string>
+    <string name="please_enter_name">请输入用户名</string>
+    <string name="request_code">获取验证码</string>
+    <string name="login_text">登录</string>
+    <string name="register_text">注册</string>
+    <string name="please_enter_code">请输入验证码</string>
+    <string name="network_wrong_please_retry">网络状态不好，请重新尝试</string>
+    <string name="network_error">网络错误</string>
+
+    <string name="bind_text">绑定</string>
+    <string name="unbind_text">解绑</string>
+
+
+    <string name="newslist_more_text">查看更多新闻</string>
+    <string name="newslist_all_text">已显示全部数据</string>
+    <string name="newslist_more_loading_text">正在加载...</string>
+    <string name="newslist_no_more_loading_text">当前已是最后一页</string>
+    <string name="newslist_no_more_text">暂无更多数据，请稍后再试</string>
+
+
+    <string name="cube_ptr_hours_ago"> 小时前</string>
+    <string name="cube_ptr_last_update">上次更新: </string>
+    <string name="cube_ptr_minutes_ago"> 分钟前</string>
+    <string name="cube_ptr_pull_down">下拉</string>
+    <string name="cube_ptr_pull_down_to_refresh">下拉刷新</string>
+    <string name="cube_ptr_refresh_complete">更新.</string>
+    <string name="cube_ptr_refreshing">更新中...</string>
+    <string name="cube_ptr_release_to_refresh">松开更新</string>
+    <string name="cube_ptr_seconds_ago"> 秒以前</string>
 </resources>

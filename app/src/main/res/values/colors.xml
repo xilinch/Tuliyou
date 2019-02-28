@@ -3,4 +3,44 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="c_gray_dddddd">#DDDDDD</color>
+    <!-- 标题栏颜色 -->
+    <color name="bottom_bar_text_focus">#f83c41</color>
+    <color name="bottom_bar_text">#999999</color>
+    <color name="login_text_color">#4d4d4d</color>
+    <color name="c_gray_eeeeee">#eeeeee</color>
+    <color name="c_gray_999999">#999999</color>
+    <color name="c_gray_666666">#666666</color>
+    <color name="list_item_bg_pressed">#ebebeb</color>
+    <color name="c_gray_333333">#333333</color>
+    <color name="activity_divider">#f7f7f7</color>
+    <color name="request_code_color">#7ff64e45</color>
+    <color name="c_red_f64e45">#f64e45</color>
+    <color name="c_gray_cccccc">#CCCCCC</color>
+    <color name="title_color">#333333</color>
+    <color name="c_gray_f7f7f7">#f7f7f7</color>
+    <color name="transparent">#00000000</color>
+    <!-- 左边栏的字体颜色 -->
+    <color name="input_biankuang_color">#DDDDDD</color>
+    <color name="blue_3e9deb">#3e9deb</color>
+    <color name="c_gray_f2f2f2">#f2f2f2</color>
+    <color name="newlist_more_text_color">#585858</color>
+
+    <color name="blue_389BEE">#389BEE</color>
+
+    <color name="red">#BA1A1D</color>
+    <color name="green">#FF34A350</color>
+    <color name="yellow">#FFF7D23E</color>
+    <color name="blue">#FF375BF1</color>
+    <integer-array name="google_colors">
+        <item>@color/red</item>
+        <item>@color/blue</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+    </integer-array>
 </resources>

@@ -17,6 +17,8 @@ import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.juyou.tuliyou.service.CheckService;
 import com.juyou.tuliyou.view.X5WebView;
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
@@ -85,11 +87,11 @@ public class MainActivity extends BaseActivity {
                     if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_HOME_KEY)) {
 //                        Log.e("my", "Home键被监听");
 //                        Toast.makeText(MainActivity.this, "Home键被监听", Toast.LENGTH_SHORT).show();
-                        startMyActivity(context);
+//                        startMyActivity(context);
                     } else if (reason.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
 //                        Toast.makeText(MainActivity.this, "多任务键被监听", Toast.LENGTH_SHORT).show();
 //                        Log.e("my", "多任务键被监听");
-                        startMyActivity(context);
+//                        startMyActivity(context);
                     }
                 }
             }
@@ -180,6 +182,8 @@ public class MainActivity extends BaseActivity {
                 if (x5WebView != null && !home.equals(x5WebView.getUrl())) {
                     x5WebView.clearHistory();
                     x5WebView.loadUrl(home);
+                } else {
+                    Toast.makeText(MainActivity.this,"您已经在首页了",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -188,28 +192,30 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 if (x5WebView != null && x5WebView.canGoBack()) {
                     x5WebView.goBack();
-
+                } else {
+                    finish();
                 }
             }
         });
         x5WebView.loadUrl(home);
-        ll_contain.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                //比较Activity根布局与当前布局的大小
-                int heightDiff = ll_contain.getRootView().getHeight() - ll_contain.getHeight();
-//                Log.e("my", "onGlobalLayout:" + heightDiff);
-                //其实这个heightDiff换成dp更靠谱一些
-                hideBottomUIMenu();
-                if (heightDiff > 100) {
-//                    hideBottomUIMenu();
-                    //大小超过100时，一般为显示虚拟键盘事件
-                } else {
-                    //大小小于100时，为不显示虚拟键盘或虚拟键盘隐藏
-
-                }
-            }
-        });
+        //不隐藏虚拟键盘
+//        ll_contain.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                //比较Activity根布局与当前布局的大小
+//                int heightDiff = ll_contain.getRootView().getHeight() - ll_contain.getHeight();
+////                Log.e("my", "onGlobalLayout:" + heightDiff);
+//                //其实这个heightDiff换成dp更靠谱一些
+//                hideBottomUIMenu();
+//                if (heightDiff > 100) {
+////                    hideBottomUIMenu();
+//                    //大小超过100时，一般为显示虚拟键盘事件
+//                } else {
+//                    //大小小于100时，为不显示虚拟键盘或虚拟键盘隐藏
+//
+//                }
+//            }
+//        });
     }
 
     /**
@@ -276,30 +282,9 @@ public class MainActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (x5WebView != null && x5WebView.canGoBack()) {
                 x5WebView.goBack();
+                return true;
             }
-            long currentTime = System.currentTimeMillis();
-            if(currentTime - lastBackClickTime < 500){
-                backClickcount = backClickcount + 1;
 
-            } else {
-                //do nothing
-
-            }
-            lastBackClickTime = currentTime;
-            if(backClickcount >= 8){
-                Intent checkService = new Intent(this, CheckService.class);
-                Intent GuardService = new Intent(this, com.juyou.tuliyou.service.GuardService.class);
-                stopService(checkService);
-                stopService(GuardService);
-                MainActivity.this.finish();
-                System.exit(0);
-            }
-            Log.e("my","backClickcount:" + backClickcount);
-            return true;
-        }
-        if (KeyEvent.KEYCODE_HOME == keyCode) {
-//            Toast.makeText(getApplicationContext(), "HOME 键已被禁用...", Toast.LENGTH_SHORT).show();
-            return true;//同理
         }
         return super.onKeyDown(keyCode, event);
     }
