@@ -6,11 +6,12 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.juyou.tuliyou"
+        //com.ssc.zx   com.juyou.tuliyou  com.muzhiplansoft.zx  com.shishic.cb  com.muzhi.zx
+        applicationId "com.muzhi.zx"
         minSdkVersion 18
         targetSdkVersion 22
-        versionCode 1006
-        versionName "1.0.6"
+        versionCode 3
+        versionName "1.1.1"
         // 开启multidex
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
